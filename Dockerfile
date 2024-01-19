@@ -6,7 +6,7 @@ RUN apt-get -yqq install python3-pip python3-dev curl gnupg
 RUN apt-get -yqq install xfoil
 
 # Copy the application code
-COPY . /app
+COPY requirements.txt /app/requirements.txt
 WORKDIR /app
 
 # Get the requirements for the Xfoil package
@@ -23,8 +23,12 @@ WORKDIR /app
 # Get Python dependencies
 RUN pip3 install -r requirements.txt
 
+COPY . /app
+
+ENV PYTHONPATH="${PYTHONPATH}:/app/Airfoils"
+
 # Expose port 5000
 EXPOSE 5000
 
 # Run the Flask application
-CMD ["python3", "./app.py"]
+CMD ["python3", "app.py"]

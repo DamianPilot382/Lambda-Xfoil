@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 
-def computeNacaAirfoil(m=0, p=0, t=12, n=100):
+def NACA4_airfoil(m=0, p=0, t=12, n=100):
     
     showPlot = False
     
