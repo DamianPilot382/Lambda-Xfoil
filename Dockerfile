@@ -23,7 +23,7 @@ WORKDIR /app
 # Get Python dependencies
 RUN pip3 install -r requirements.txt
 
-COPY . /app
+COPY . /app/.
 
 ENV PYTHONPATH="${PYTHONPATH}:/app/Airfoils"
 

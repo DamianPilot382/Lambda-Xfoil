@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify, Response
 from flask_cors import CORS
 from NACA4 import NACA4_airfoil
+from InputFile import compute_input_file
 import numpy as np
 import os
 
@@ -37,6 +38,17 @@ def get_NACA4_airfoil():
     n = int(data['numPoints'])
 
     datapoints = NACA4_airfoil(m, p, t, n)
+
+    return Response(
+       datapoints.to_csv(index=False),
+       mimetype="text/csv",
+       headers={"Content-disposition":"attachment; filename=airfoil.csv"})
+    
+@app.route('/InputFile', methods=['POST'])
+def input_file():
+    data = request.get_json()
+    databuffer = np.array(data['data'])
+    datapoints = compute_input_file(databuffer)
         
     return Response(
        datapoints.to_csv(index=False),
