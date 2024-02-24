@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify, Response
 from flask_cors import CORS
-from NACA4 import NACA4_airfoil
-from InputFile import compute_input_file
+from Airfoils.NACA4 import NACA4_airfoil
+from Airfoils.InputFile import compute_input_file
 import numpy as np
 import os
 
@@ -13,7 +13,7 @@ CORS(app)
 def test():
     return jsonify({'message': 'Pong'})
 
-@app.route("/xfoil", methods=['GET'])
+@app.route('/xfoil', methods=['GET'])
 def xfoil():
     ret = os.popen("xfoil").read()
     print(ret)
