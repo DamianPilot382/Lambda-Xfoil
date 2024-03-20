@@ -1,12 +1,17 @@
-from flask import Flask, request, jsonify, Response
+from flask import Flask, request, jsonify, Response, session, send_file
+from flask_session import Session
 from flask_cors import CORS
 from Airfoils.NACA4 import NACA4_airfoil
 from Airfoils.InputFile import compute_input_file
+from Xfoil.Xfoil import download_file
 import numpy as np
 import os
 
 # creates a flask server for post requests
 app = Flask(__name__)
+app.config["SESSION_PERMANENT"] = False
+app.config["SESSION_TYPE"] = "filesystem"
+Session(app)
 CORS(app)
 
 @app.route('/ping', methods=['GET'])
@@ -18,6 +23,23 @@ def xfoil():
     ret = os.popen("xfoil").read()
     print(ret)
     return ret
+
+@app.route('/writeFile', methods=['POST'])
+def writeFile():
+    
+    app.logger.info('Writing file')
+    
+    f = request.files['airfoilFile']
+    f.save('doge.dat')
+    f.close()
+    
+    t = type(f)
+    app.logger.info(t)
+    
+    try:
+        return send_file('doge.dat', as_attachment=True)
+    except Exception as e:
+        return str(e)
 
 @app.route('/compute', methods=['POST'])
 # TODO Implement
@@ -49,11 +71,18 @@ def input_file():
     data = request.get_json()
     databuffer = np.array(data['data'])
     datapoints = compute_input_file(databuffer)
-        
+
     return Response(
        datapoints.to_csv(index=False),
        mimetype="text/csv",
        headers={"Content-disposition":"attachment; filename=airfoil.csv"})
+    
+@app.route('/HelloXfoil', methods=['POST'])
+def hello_xfoil():
+    
+    ret = os.popen("xfoil < inputXfoil.txt").read()
+    app.logger.info(ret)
+    return ret
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))

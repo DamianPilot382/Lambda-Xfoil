@@ -1,5 +1,7 @@
 flask
 flask_cors
+cachelib
+Flask-Session
 numpy
 matplotlib
 pandas
