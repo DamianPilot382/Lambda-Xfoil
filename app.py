@@ -1,11 +1,15 @@
 from flask import Flask, request, jsonify, Response, session, send_file
 from flask_session import Session
 from flask_cors import CORS
+
+import numpy as np
+import os
+
 from Airfoils.NACA4 import NACA4_airfoil
 from Airfoils.InputFile import compute_input_file
 from Xfoil.Xfoil import download_file
-import numpy as np
-import os
+
+from Solver.Airfoil import compute
 
 # creates a flask server for post requests
 app = Flask(__name__)
@@ -42,14 +46,13 @@ def writeFile():
         return str(e)
 
 @app.route('/compute', methods=['POST'])
-# TODO Implement
 def compute_airfoil():
     data = request.get_json()
     vinf = float(data['v_inf'])
     aoa = float(data['aoa'])
     databuffer = np.array(data['data'])
-    # text, panel_geometry, geom_pts, control_pts, pressure = compute(vinf, aoa, databuffer)
-    return jsonify({'text': "TODO", 'panel_geometry': "TODO", 'geom_pts': "TODO", 'control_pts': "TODO", 'pressure': "TODO"})
+    text, panel_geometry, geom_pts, control_pts, pressure = compute(vinf, aoa, databuffer)
+    return jsonify({'text': text, 'panel_geometry': panel_geometry, 'geom_pts': geom_pts, 'control_pts': control_pts, 'pressure': pressure})
 
 @app.route('/NACA4Airfoil', methods=['POST'])
 def get_NACA4_airfoil():

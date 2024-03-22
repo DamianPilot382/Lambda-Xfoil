@@ -5,3 +5,4 @@ Flask-Session
 numpy
 matplotlib
 pandas
+scipy
