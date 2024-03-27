@@ -8,7 +8,7 @@ import os
 
 from Airfoils.NACA4 import NACA4_airfoil
 from Airfoils.InputFile import compute_input_file
-from Xfoil.Xfoil import download_file
+from Airfoils.Download import download_as_csv
 
 from Solver.Airfoil import compute
 
@@ -66,6 +66,18 @@ def get_NACA4_airfoil():
     datapoints = NACA4_airfoil(m, p, t, n)
 
     return datapoints.to_json(orient='records')
+
+@app.route('/downloadAsCSV', methods=['POST'])
+def get_NACA4_airfoil():
+    data = request.get_json()
+    airfoilData = float(data['airfoilData'])
+
+    datapoints = download_as_csv(airfoilData)
+
+    return Response(
+       datapoints.to_csv(index=False),
+       mimetype="text/csv",
+       headers={"Content-disposition":"attachment; filename=airfoil.csv"})
     
 @app.route('/InputFile', methods=['POST'])
 def input_file():
