@@ -68,7 +68,7 @@ def get_NACA4_airfoil():
     return datapoints.to_json(orient='records')
 
 @app.route('/downloadAsCSV', methods=['POST'])
-def get_NACA4_airfoil():
+def download_as_csv():
     data = request.get_json()
     airfoilData = float(data['airfoilData'])
 
