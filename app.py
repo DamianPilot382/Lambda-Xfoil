@@ -1,8 +1,6 @@
 from flask import Flask, request, jsonify, Response, session, send_file
-from flask_session import Session
 from flask_cors import CORS
 
-import pandas as pd
 import numpy as np
 import os
 
@@ -14,9 +12,6 @@ from Solver.Airfoil import compute
 
 # creates a flask server for post requests
 app = Flask(__name__)
-app.config["SESSION_PERMANENT"] = False
-app.config["SESSION_TYPE"] = "filesystem"
-Session(app)
 CORS(app)
 
 @app.route('/ping', methods=['GET'])
@@ -28,23 +23,6 @@ def xfoil():
     ret = os.popen("xfoil").read()
     print(ret)
     return ret
-
-@app.route('/writeFile', methods=['POST'])
-def writeFile():
-    
-    app.logger.info('Writing file')
-    
-    f = request.files['airfoilFile']
-    f.save('doge.dat')
-    f.close()
-    
-    t = type(f)
-    app.logger.info(t)
-    
-    try:
-        return send_file('doge.dat', as_attachment=True)
-    except Exception as e:
-        return str(e)
 
 @app.route('/compute', methods=['POST'])
 def compute_airfoil():
