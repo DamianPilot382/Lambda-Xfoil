@@ -1,14 +1,12 @@
-from flask import Flask, request, jsonify, Response, session, send_file
+from flask import Flask, request, jsonify
 from flask_cors import CORS
 
-import numpy as np
 import os
 
 from Airfoils.NACA4 import NACA4_airfoil
-
 from Solver.Airfoil import compute
 
-# creates a flask server for post requests
+# Create the flask server for post requests
 app = Flask(__name__)
 CORS(app)
 
@@ -16,11 +14,6 @@ CORS(app)
 def test():
     return jsonify({'message': 'Pong'})
 
-@app.route('/xfoil', methods=['GET'])
-def xfoil():
-    ret = os.popen("xfoil").read()
-    print(ret)
-    return ret
 
 @app.route('/compute', methods=['POST'])
 def compute_airfoil():
@@ -42,13 +35,6 @@ def get_NACA4_airfoil():
     datapoints = NACA4_airfoil(m, p, t, n)
 
     return datapoints.to_json(orient='records')
-    
-@app.route('/HelloXfoil', methods=['POST'])
-def hello_xfoil():
-    
-    ret = os.popen("xfoil < inputXfoil.txt").read()
-    app.logger.info(ret)
-    return ret
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
