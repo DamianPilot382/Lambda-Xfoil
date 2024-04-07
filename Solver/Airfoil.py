@@ -8,8 +8,11 @@ mpl.use('Agg')
 import matplotlib.pyplot as plt
 from matplotlib import path
 
+import pandas as pd
+
 import io
 import base64
+import json
 
 from Solver.COMPUTE_IJ_SPM import COMPUTE_IJ_SPM
 from Solver.COMPUTE_KL_VPM import COMPUTE_KL_VPM
@@ -21,6 +24,12 @@ PLOT = False
 
 def compute(Vinf, AoA, dataBuffer):
     
+    dataBuffer = dataBuffer.replace("'", "\"")
+    dfToJson = json.loads(dataBuffer)
+    df = pd.DataFrame(dfToJson)
+    
+    airfoilData = df.to_numpy()
+    
     text_output = "Vinf: %f\nAoA: %f\n" % (Vinf, AoA)
 
 
@@ -28,9 +37,9 @@ def compute(Vinf, AoA, dataBuffer):
     AoAR = AoA*(np.pi/180)
     
     # Boundary point X-coordinate
-    XB = dataBuffer[:,0]
+    XB = airfoilData[:,0]
     # Boundary point Y-coordinate
-    YB = dataBuffer[:,1]
+    YB = airfoilData[:,1]
 
     # Number of boundary points
     numPts = len(XB)

@@ -28,7 +28,7 @@ def compute_airfoil():
     data = request.get_json()
     vinf = float(data['v_inf'])
     aoa = float(data['aoa'])
-    databuffer = np.array(data['data'])
+    databuffer = data['airfoilData']
     text, panel_geometry, geom_pts, control_pts, pressure = compute(vinf, aoa, databuffer)
     return jsonify({'text': text, 'panel_geometry': panel_geometry, 'geom_pts': geom_pts, 'control_pts': control_pts, 'pressure': pressure})
 
