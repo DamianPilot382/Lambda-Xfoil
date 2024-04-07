@@ -1,24 +1,19 @@
 # SOURCE/VORTEX PANEL METHOD - SINGLE AIRFOIL
 # Based on the files and videos from JoshTheEngineer
 
-import numpy as np
 import math as math
 import matplotlib as mpl
 mpl.use('Agg')
 import matplotlib.pyplot as plt
-from matplotlib import path
-
+import numpy as np
 import pandas as pd
 
-import io
 import base64
+import io
 import json
 
 from Solver.COMPUTE_IJ_SPM import COMPUTE_IJ_SPM
 from Solver.COMPUTE_KL_VPM import COMPUTE_KL_VPM
-from Solver.STREAMLINE_SPM import STREAMLINE_SPM
-from Solver.STREAMLINE_VPM import STREAMLINE_VPM
-from Solver.COMPUTE_CIRCULATION import COMPUTE_CIRCULATION
 
 PLOT = False
 
@@ -31,7 +26,6 @@ def compute(Vinf, AoA, dataBuffer):
     airfoilData = df.to_numpy()
     
     text_output = "Vinf: %f\nAoA: %f\n" % (Vinf, AoA)
-
 
     # Convert angle of attack to radians
     AoAR = AoA*(np.pi/180)

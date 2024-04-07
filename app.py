@@ -14,7 +14,6 @@ CORS(app)
 def test():
     return jsonify({'message': 'Pong'})
 
-
 @app.route('/compute', methods=['POST'])
 def compute_airfoil():
     data = request.get_json()
