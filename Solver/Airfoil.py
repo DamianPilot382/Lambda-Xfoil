@@ -11,6 +11,7 @@ import pandas as pd
 import base64
 import io
 import json
+import json_fix
 
 from Solver.COMPUTE_IJ_SPM import COMPUTE_IJ_SPM
 from Solver.COMPUTE_KL_VPM import COMPUTE_KL_VPM
@@ -331,10 +332,18 @@ def compute(Vinf, AoA, dataBuffer):
     plt.cla()
     # Airfoil middle index for VPM data
     midIndS = int(np.floor(len(Cp)/2))
+    
+    pressureCoeff = {
+        "upper_x": XC[midIndS+1:len(XC)].tolist(),
+        "upper_y": Cp[midIndS+1:len(XC)].tolist(),
+        "lower_x": XC[0:midIndS].tolist(),
+        "lower_y": Cp[0:midIndS].tolist()
+    }
+    
     # Plot Cp for upper surface of airfoil from panel method
-    plt.plot(XC[midIndS+1:len(XC)],Cp[midIndS+1:len(XC)],'ks',markerfacecolor='b',label='VPM Upper')
+    plt.plot(pressureCoeff["upper_x"], pressureCoeff["upper_y"],'ks',markerfacecolor='b',label='VPM Upper')
     # Plot Cp for lower surface of airfoil from panel method
-    plt.plot(XC[0:midIndS],Cp[0:midIndS],'ks',markerfacecolor='r',label='VPM Lower')
+    plt.plot(pressureCoeff["lower_x"], pressureCoeff["lower_y"],'ks',markerfacecolor='r',label='VPM Lower')
     plt.xlim(0,1)
     plt.xlabel('X Coordinate')
     plt.ylabel('Cp')
@@ -352,5 +361,7 @@ def compute(Vinf, AoA, dataBuffer):
     plt.savefig(stringBytesIO, format='png')
     stringBytesIO.seek(0)
     pressure = {"pic": base64.b64encode(stringBytesIO.read()).decode('utf-8'), "data": [vpmUpper, vpmLower]}
-      
-    return text_output, panel_geometry, geom_pts, control_pts, pressure
+    
+    js = json.dumps(pressureCoeff)    
+    
+    return text_output, panel_geometry, geom_pts, control_pts, pressure, pressureCoeff

@@ -20,8 +20,8 @@ def compute_airfoil():
     vinf = float(data['v_inf'])
     aoa = float(data['aoa'])
     databuffer = data['airfoilData']
-    text, panel_geometry, geom_pts, control_pts, pressure = compute(vinf, aoa, databuffer)
-    return jsonify({'text': text, 'panel_geometry': panel_geometry, 'geom_pts': geom_pts, 'control_pts': control_pts, 'pressure': pressure})
+    text, panel_geometry, geom_pts, control_pts, pressure, pressureCoeff = compute(vinf, aoa, databuffer)
+    return jsonify({'text': text, 'panel_geometry': panel_geometry, 'geom_pts': geom_pts, 'control_pts': control_pts, 'pressure': pressure, 'pressureCoeff': pressureCoeff})
 
 @app.route('/NACA4Airfoil', methods=['POST'])
 def get_NACA4_airfoil():
